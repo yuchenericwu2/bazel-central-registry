@@ -18,17 +18,19 @@ proto_library(
 
 cc_proto_library(
     name = "common_cc_proto",
-    protos = [":common_proto"],
+    deps = [":common_proto"],
 )
 
 cc_grpc_library(
     name = "common_cc_grpc",
-    protos = [":common_proto"],
+    srcs = [":common_proto"],
+    grpc_only = True,
+    deps = [":common_cc_proto"],
 )
 
 py_proto_library(
     name = "common_py_pb2",
-    srcs = ["specification/protocol/open_inference_grpc.proto"],
+    deps = [":common_proto"],
 )
 
 py_grpc_library(

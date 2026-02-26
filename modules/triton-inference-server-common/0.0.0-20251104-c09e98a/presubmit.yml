@@ -5,7 +5,6 @@ matrix:
     - ubuntu2204
     - macos
     - macos_arm64
-    - windows
   bazel:
     - 7.x
     - 8.x
@@ -14,9 +13,27 @@ tasks:
     name: Verify build targets
     platform: ${{ platform }}
     bazel: ${{ bazel }}
+    build_flags:
+      - '--cxxopt=-std=c++17'
+      - '--host_cxxopt=-std=c++17'
     build_targets:
       - '@triton-inference-server-common//protobuf:common_proto'
       - '@triton-inference-server-common//protobuf:common_cc_proto'
       - '@triton-inference-server-common//protobuf:common_cc_grpc'
       - '@triton-inference-server-common//protobuf:common_py_pb2'
       - '@triton-inference-server-common//protobuf:common_py_pb2_grpc'
+  verify_targets_windows:
+    name: Verify build targets (Windows)
+    platform: windows
+    bazel: ${{ bazel }}
+    build_flags:
+      - '--cxxopt=/std:c++17'
+      - '--host_cxxopt=/std:c++17'
+      - '--cxxopt=/Zc:__cplusplus'
+      - '--host_cxxopt=/Zc:__cplusplus'
+      - '--dynamic_mode=off'
+    build_targets:
+      # Only test the native C++ targets on Windows
+      - '@triton-inference-server-common//protobuf:common_proto'
+      - '@triton-inference-server-common//protobuf:common_cc_proto'
+      - '@triton-inference-server-common//protobuf:common_cc_grpc'
